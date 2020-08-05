@@ -1,5 +1,5 @@
-#include <iostream>
-#include <SDL.h>
+#include <Graphics/Texture.h>
+#include <pch.h>
 
 int main(int, char**)
 {
@@ -8,6 +8,8 @@ int main(int, char**)
 		std::cout << "SDL_INIT Error." << SDL_GetError() << std::endl;
 		return 1;
 	}
+
+	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_TIF);
 
 	SDL_Window* window = SDL_CreateWindow("GAT 150", 100, 100, 800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 	if (window == nullptr)
@@ -27,19 +29,16 @@ int main(int, char**)
 	}
 
 	//Create textures
-	int width = 128, height = 128;
+	int width = 128, height = 128; 
 
 	SDL_Texture* texture1 = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, width, height);
 	Uint32* pixels = new Uint32[width * height];
 	memset(pixels, 255, width * height * sizeof(Uint32));
 	SDL_UpdateTexture(texture1, NULL, pixels, width * sizeof(Uint32));
 
-	SDL_Surface* surface = SDL_LoadBMP("sf2.bmp");
-	if (surface == nullptr)
-	{
-		return 1;
-	}
-	SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer, surface);
+	hummus::Texture texture;
+	texture.Create("sf2.png", renderer);
+	float angle{ 0 };
 	
 	SDL_Event event;
 	bool quit = false;
@@ -77,19 +76,13 @@ int main(int, char**)
 		rect.h = height * 3;
 		SDL_RenderCopy(renderer, texture1, NULL, &rect);
 
-		int w, h;
-		SDL_QueryTexture(texture2, NULL, NULL, &w, &h);
-
-		SDL_Rect rect2;
-		rect2.x = 500;
-		rect2.y = 20;
-		rect2.w = w;
-		rect2.h = h;
-		SDL_RenderCopy(renderer, texture2, NULL, &rect2);
+		angle += 0.1f;
+		texture.Draw({ 500, 100 }, { 1, 1 }, angle);
 
 		SDL_RenderPresent(renderer);
 	}
 
+	IMG_Quit();
 	SDL_Quit();
 
 	return 0;
