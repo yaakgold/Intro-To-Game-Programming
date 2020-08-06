@@ -1,15 +1,16 @@
 #pragma once
+#include <Resources/Resource.h>
 #include <Math\Vector2.h>
 #include <string>
 #include <SDL.h>
 
 namespace hummus
 {
-	class Texture
+	class Texture : public Resource
 	{
 	public:
-		bool Create(const std::string& fileName, SDL_Renderer* renderer);
-		void Destroy();
+		bool Create(const std::string& fileName, void* renderer) override;
+		void Destroy() override;
 
 		void Draw(const Vector2& pos, const Vector2& scale, float angle);
 
@@ -17,6 +18,6 @@ namespace hummus
 
 	protected:
 		SDL_Texture* m_texture{ nullptr };
-		SDL_Renderer* m_renderer{ nullptr };
+		SDL_Renderer* mem_renderer{ nullptr };
 	};
 }
