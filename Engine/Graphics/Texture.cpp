@@ -42,6 +42,20 @@ namespace hummus
 		SDL_RenderCopyEx(mem_renderer, m_texture, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
 	}
 
+	void Texture::Draw(const SDL_Rect& source, const Vector2& pos, const Vector2& scale, float angle)
+	{
+		Vector2 size = { source.w, source.h };
+		size *= scale;
+
+		SDL_Rect rect;
+		rect.x = static_cast<int>(pos.x);
+		rect.y = static_cast<int>(pos.y);
+		rect.w = static_cast<int>(size.x);
+		rect.h = static_cast<int>(size.y);
+
+		SDL_RenderCopyEx(mem_renderer, m_texture, &source, &rect, angle, nullptr, SDL_FLIP_NONE);
+	}
+
 	Vector2 Texture::GetSize()
 	{
 		int w, h;
