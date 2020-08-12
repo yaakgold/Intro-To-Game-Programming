@@ -1,21 +1,13 @@
 #include <pch.h>
-#include <Core/Timer.h>
+#include <Engine.h>
+#include <Math/MathFile.h>
 #include <Graphics/Texture.h>
-#include <Input/InputSystem.h>
-#include <Graphics/Renderer.h>
-#include <Resources/ResourceManager.h>
+#include <Objects/GameObject.h>
+#include <Components/PhysicsComponent.h>
+#include <Components/SpriteComponent.h>
 
-hummus::ResourceManager rm;
-hummus::Renderer renderer;
-hummus::InputSystem inputSystem;
-hummus::FrameTimer timer;
-
-//namespace hummus
-//{
-//	using clock = std::chrono::high_resolution_clock;
-//	using clockDuration = std::chrono::duration<clock::rep, std::nano>;
-//}
-
+hummus::Engine engine;
+hummus::GameObject player;
 
 int main(int, char**)
 {
@@ -23,18 +15,23 @@ int main(int, char**)
 	{
 		std::sqrt(rand() % 100);
 	}
-	std::cout << timer.ElapsedSeconds() << std::endl;	
+	std::cout << engine.GetTimer().ElapsedSeconds() << std::endl;	
 
+	engine.Startup();
 
-	renderer.Startup();
-	renderer.Create("GAT150", 800, 600);
-	inputSystem.Startup();
+	player.Create(&engine);
+	player.m_transform.position = { 400, 300 };
+
+	hummus::Component* comp = new hummus::PhysicsComponent;
+	player.AddComponent(comp);
+	comp->Create();
+
+	comp = new hummus::SpriteComponent;
+	player.AddComponent(comp);
+	comp->Create();
 
 	//Create textures
-	hummus::Texture* car = rm.Get<hummus::Texture>("cars.png", &renderer);
-	hummus::Texture* background = rm.Get<hummus::Texture>("background.png", &renderer);
-	float angle{ 0 };
-	hummus::Vector2 position{ 400, 300 };
+	hummus::Texture* background = engine.GetSystem<hummus::ResourceManager>()->Get<hummus::Texture>("background.png", engine.GetSystem<hummus::Renderer>());
 	
 	SDL_Event event;
 	bool quit = false;
@@ -50,43 +47,46 @@ int main(int, char**)
 			break;
 		}
 
-		timer.Tick();
-		inputSystem.Update();
-		renderer.StartFrame();
+		engine.Update();
+		player.Update();
+
 
 		//Quit
-		if (inputSystem.GetButtonState(SDL_SCANCODE_ESCAPE) == hummus::InputSystem::eButtonState::HELD)
+		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_ESCAPE) == hummus::InputSystem::eButtonState::HELD)
 			quit = true;
 
 		//Movement
-		if (inputSystem.GetButtonState(SDL_SCANCODE_LEFT) == hummus::InputSystem::eButtonState::HELD || inputSystem.GetButtonState(SDL_SCANCODE_A) == hummus::InputSystem::eButtonState::HELD)
+		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_LEFT) == hummus::InputSystem::eButtonState::HELD || engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_A) == hummus::InputSystem::eButtonState::HELD)
 		{
-			position.x += -200.0f * timer.DeltaTime();
+			player.m_transform.angle += -200.0f * engine.GetTimer().DeltaTime();
 		}
-		if (inputSystem.GetButtonState(SDL_SCANCODE_RIGHT) == hummus::InputSystem::eButtonState::HELD || inputSystem.GetButtonState(SDL_SCANCODE_D) == hummus::InputSystem::eButtonState::HELD)
+		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_RIGHT) == hummus::InputSystem::eButtonState::HELD || engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_D) == hummus::InputSystem::eButtonState::HELD)
 		{
-			position.x += 200.0f * timer.DeltaTime();
+			player.m_transform.angle += 200.0f * engine.GetTimer().DeltaTime();
 		}
-		if (inputSystem.GetButtonState(SDL_SCANCODE_UP) == hummus::InputSystem::eButtonState::HELD || inputSystem.GetButtonState(SDL_SCANCODE_W) == hummus::InputSystem::eButtonState::HELD)
+
+		//Physics
+		hummus::Vector2 force{ 0,0 };
+
+		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_UP) == hummus::InputSystem::eButtonState::HELD || engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_W) == hummus::InputSystem::eButtonState::HELD)
 		{
-			position.y += -200.0f * timer.DeltaTime();
+			force = hummus::Vector2::forward * 1000.0f;
 		}
-		if (inputSystem.GetButtonState(SDL_SCANCODE_DOWN) == hummus::InputSystem::eButtonState::HELD || inputSystem.GetButtonState(SDL_SCANCODE_S) == hummus::InputSystem::eButtonState::HELD)
+		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_DOWN) == hummus::InputSystem::eButtonState::HELD || engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_S) == hummus::InputSystem::eButtonState::HELD)
 		{
-			position.y += 200.0f * timer.DeltaTime();
+			force = hummus::Vector2::forward * -1000.0f;
 		}
+		force = hummus::Vector2::Rotate(force, player.m_transform.angle * hummus::DEG_TO_RAD);
 
 		//Draw
-		angle += 180 * timer.DeltaTime();
 		background->Draw({ 0, 0 }, { 1, 1 }, 0);
-		car->Draw({0, 16, 64, 144}, position, { 1, 1 }, 0);
 
-		renderer.EndFrame();
+		player.Draw();
+
+		engine.GetSystem<hummus::Renderer>()->EndFrame();
 	}
 
-	inputSystem.Shutdown();
-	renderer.Shutdown();
-	SDL_Quit();
+	engine.Shutdown();
 
 	return 0;
 }
