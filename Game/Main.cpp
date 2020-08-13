@@ -6,12 +6,14 @@
 #include <Objects/GameObject.h>
 #include <Components/PhysicsComponent.h>
 #include <Components/SpriteComponent.h>
+#include "Components/PlayerComponent.h"
 
 hummus::Engine engine;
 hummus::GameObject player;
 
 int main(int, char**)
 {
+#pragma region JSON Testing
 	rapidjson::Document document;
 	hummus::json::Load("json.txt", document);
 
@@ -42,7 +44,7 @@ int main(int, char**)
 	hummus::Color color; 
 	hummus::json::Get(document, "color", color);
 	std::cout << color << std::endl;
-
+#pragma endregion
 
 	for (size_t i = 0; i < 100; i++)
 	{
@@ -60,6 +62,10 @@ int main(int, char**)
 	comp->Create();
 
 	comp = new hummus::SpriteComponent;
+	player.AddComponent(comp);
+	comp->Create();
+
+	comp = new hummus::PlayerComponent;
 	player.AddComponent(comp);
 	comp->Create();
 
@@ -87,29 +93,6 @@ int main(int, char**)
 		//Quit
 		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_ESCAPE) == hummus::InputSystem::eButtonState::HELD)
 			quit = true;
-
-		//Movement
-		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_LEFT) == hummus::InputSystem::eButtonState::HELD || engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_A) == hummus::InputSystem::eButtonState::HELD)
-		{
-			player.m_transform.angle += -200.0f * engine.GetTimer().DeltaTime();
-		}
-		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_RIGHT) == hummus::InputSystem::eButtonState::HELD || engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_D) == hummus::InputSystem::eButtonState::HELD)
-		{
-			player.m_transform.angle += 200.0f * engine.GetTimer().DeltaTime();
-		}
-
-		//Physics
-		hummus::Vector2 force{ 0,0 };
-
-		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_UP) == hummus::InputSystem::eButtonState::HELD || engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_W) == hummus::InputSystem::eButtonState::HELD)
-		{
-			force = hummus::Vector2::forward * 1000.0f;
-		}
-		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_DOWN) == hummus::InputSystem::eButtonState::HELD || engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_S) == hummus::InputSystem::eButtonState::HELD)
-		{
-			force = hummus::Vector2::forward * -1000.0f;
-		}
-		force = hummus::Vector2::Rotate(force, player.m_transform.angle * hummus::DEG_TO_RAD);
 
 		//Draw
 		background->Draw({ 0, 0 }, { 1, 1 }, 0);

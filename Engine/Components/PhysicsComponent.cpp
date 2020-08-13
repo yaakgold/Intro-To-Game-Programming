@@ -3,8 +3,7 @@
 
 bool hummus::PhysicsComponent::Create(void* data)
 {
-	m_velocity = Vector2::forward * 100;
-
+	m_drag = 0.95f;
     return true;
 }
 
