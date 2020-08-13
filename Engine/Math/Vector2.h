@@ -47,10 +47,12 @@ namespace hummus
 
 		Vector2 operator - () { return Vector2{ -x, -y }; }
 
+
 		float& operator [] (size_t index) { return (&x)[index]; }
 		const float& operator [] (size_t index) const { return (&x)[index]; }
 
 		//Streams
+		friend std::ostream& operator << (std::ostream& stream, Vector2& v);
 		friend std::istream& operator >> (std::istream& stream, Vector2& v);
 
 #pragma endregion

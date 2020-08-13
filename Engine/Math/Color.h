@@ -54,6 +54,7 @@ namespace hummus
 
 		//Streams
 		friend std::istream& operator >> (std::istream& stream, Color& c);
+		friend std::ostream& operator << (std::ostream& stream, Color& c);
 
 #pragma endregion
 

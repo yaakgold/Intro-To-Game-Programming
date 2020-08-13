@@ -1,5 +1,6 @@
 #include <pch.h>
 #include <Engine.h>
+#include <Core/Json.h>
 #include <Math/MathFile.h>
 #include <Graphics/Texture.h>
 #include <Objects/GameObject.h>
@@ -11,6 +12,38 @@ hummus::GameObject player;
 
 int main(int, char**)
 {
+	rapidjson::Document document;
+	hummus::json::Load("json.txt", document);
+
+	std::string str; 
+	hummus::json::Get(document, "string", str);
+	std::cout << str << std::endl; 
+	
+	bool b;
+	hummus::json::Get(document, "bool", b); 
+	std::cout << b << std::endl; 
+	
+	int i1; 
+	hummus::json::Get(document, "integer1", i1); 
+	std::cout << i1 << std::endl; 
+	
+	int i2;
+	hummus::json::Get(document, "integer2", i2);
+	std::cout << i2 << std::endl; 
+	
+	float f;
+	hummus::json::Get(document, "float", f);
+	std::cout << f << std::endl; 
+	
+	hummus::Vector2 v2; 
+	hummus::json::Get(document, "vector2", v2);
+	std::cout << v2 << std::endl; 
+	
+	hummus::Color color; 
+	hummus::json::Get(document, "color", color);
+	std::cout << color << std::endl;
+
+
 	for (size_t i = 0; i < 100; i++)
 	{
 		std::sqrt(rand() % 100);
