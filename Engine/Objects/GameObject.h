@@ -14,6 +14,8 @@ namespace hummus
 		virtual bool Create(void* data = nullptr) override;
 		virtual void Destroy() override;
 
+		virtual void Read(const rapidjson::Value& value) override;
+
 		template<typename T>
 		inline T* GetComponent()
 		{

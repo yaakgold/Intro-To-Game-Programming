@@ -14,6 +14,7 @@ hummus::GameObject player;
 int main(int, char**)
 {
 #pragma region JSON Testing
+	/*
 	rapidjson::Document document;
 	hummus::json::Load("json.txt", document);
 
@@ -44,6 +45,7 @@ int main(int, char**)
 	hummus::Color color; 
 	hummus::json::Get(document, "color", color);
 	std::cout << color << std::endl;
+	*/
 #pragma endregion
 
 	for (size_t i = 0; i < 100; i++)
@@ -55,7 +57,9 @@ int main(int, char**)
 	engine.Startup();
 
 	player.Create(&engine);
-	player.m_transform.position = { 400, 300 };
+	rapidjson::Document document;
+	hummus::json::Load("player.txt", document);
+	player.Read(document);
 
 	hummus::Component* comp = new hummus::PhysicsComponent;
 	player.AddComponent(comp);
@@ -63,6 +67,8 @@ int main(int, char**)
 
 	comp = new hummus::SpriteComponent;
 	player.AddComponent(comp);
+	hummus::json::Load("sprite.txt", document);
+	comp->Read(document);
 	comp->Create();
 
 	comp = new hummus::PlayerComponent;

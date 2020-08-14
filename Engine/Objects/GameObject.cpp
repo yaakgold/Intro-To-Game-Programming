@@ -16,6 +16,13 @@ namespace hummus
 
     }
 
+    void GameObject::Read(const rapidjson::Value& value)
+    {
+        hummus::json::Get(value, "position", m_transform.position);
+        hummus::json::Get(value, "scale", m_transform.scale);
+        hummus::json::Get(value, "angle", m_transform.angle);
+    }
+
     void GameObject::AddComponent(Component* component)
     {
         component->m_owner = this;

@@ -10,6 +10,7 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 
+#include <Core/Assert.h>
 #include <Math/MathFile.h>
 #include <Math/Random.h>
 #include <Math/Transform.h>
@@ -20,6 +21,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <cassert>
 #include <string>
 #include <vector>
 #include <chrono>
