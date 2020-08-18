@@ -19,6 +19,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include <functional>
 #include <iostream>
 #include <fstream>
 #include <cassert>

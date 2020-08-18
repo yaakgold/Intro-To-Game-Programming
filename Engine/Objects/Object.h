@@ -10,5 +10,13 @@ namespace hummus
 		virtual void Destroy() = 0;
 
 		virtual void Read(const rapidjson::Value& value) {}
+
+		template <typename T>
+		static Object* Instantiate()
+		{
+			T* instance = new T;
+
+			return instance;
+		}
 	};
 }

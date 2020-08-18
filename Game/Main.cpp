@@ -1,6 +1,7 @@
 #include <pch.h>
 #include <Engine.h>
 #include <Core/Json.h>
+#include <Core/Factory.h>
 #include <Math/MathFile.h>
 #include <Graphics/Texture.h>
 #include <Objects/GameObject.h>
@@ -9,7 +10,7 @@
 #include "Components/PlayerComponent.h"
 
 hummus::Engine engine;
-hummus::GameObject player;
+hummus::Factory<hummus::Object, std::string> objectFactory;
 
 int main(int, char**)
 {
@@ -48,31 +49,31 @@ int main(int, char**)
 	*/
 #pragma endregion
 
-	for (size_t i = 0; i < 100; i++)
-	{
-		std::sqrt(rand() % 100);
-	}
-	std::cout << engine.GetTimer().ElapsedSeconds() << std::endl;	
-
 	engine.Startup();
 
-	player.Create(&engine);
+	objectFactory.Register("GameObject", hummus::Object::Instantiate<hummus::GameObject>);
+	objectFactory.Register("PhysicsComponent", hummus::Object::Instantiate<hummus::PhysicsComponent>);
+	objectFactory.Register("SpriteComponent", hummus::Object::Instantiate<hummus::SpriteComponent>);
+	objectFactory.Register("PlayerComponent", hummus::Object::Instantiate<hummus::PlayerComponent>);
+	
+	hummus::GameObject* player = objectFactory.Create<hummus::GameObject>("GameObject");
+	player->Create(&engine);
 	rapidjson::Document document;
 	hummus::json::Load("player.txt", document);
-	player.Read(document);
+	player->Read(document);
 
-	hummus::Component* comp = new hummus::PhysicsComponent;
-	player.AddComponent(comp);
+	hummus::Component* comp = objectFactory.Create<hummus::PhysicsComponent>("PhysicsComponent");
+	player->AddComponent(comp);
 	comp->Create();
 
-	comp = new hummus::SpriteComponent;
-	player.AddComponent(comp);
+	comp = objectFactory.Create<hummus::SpriteComponent>("SpriteComponent");
+	player->AddComponent(comp);
 	hummus::json::Load("sprite.txt", document);
 	comp->Read(document);
 	comp->Create();
 
-	comp = new hummus::PlayerComponent;
-	player.AddComponent(comp);
+	comp = objectFactory.Create<hummus::PlayerComponent>("PlayerComponent");
+	player->AddComponent(comp);
 	comp->Create();
 
 	//Create textures
@@ -93,7 +94,7 @@ int main(int, char**)
 		}
 
 		engine.Update();
-		player.Update();
+		player->Update();
 
 
 		//Quit
@@ -103,7 +104,7 @@ int main(int, char**)
 		//Draw
 		background->Draw({ 0, 0 }, { 1, 1 }, 0);
 
-		player.Draw();
+		player->Draw();
 
 		engine.GetSystem<hummus::Renderer>()->EndFrame();
 	}
