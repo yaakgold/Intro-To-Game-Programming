@@ -2,15 +2,15 @@
 #include <Engine.h>
 #include <Core/Json.h>
 #include <Core/Factory.h>
+#include <Objects/Scene.h>
 #include <Math/MathFile.h>
 #include <Graphics/Texture.h>
-#include <Objects/GameObject.h>
-#include <Components/PhysicsComponent.h>
-#include <Components/SpriteComponent.h>
+#include <Objects/ObjectFactory.h>
 #include "Components/PlayerComponent.h"
 
 hummus::Engine engine;
-hummus::Factory<hummus::Object, std::string> objectFactory;
+hummus::Scene scene;
+//hummus::Factory<hummus::Object, std::string> objectFactory;
 
 int main(int, char**)
 {
@@ -51,33 +51,37 @@ int main(int, char**)
 
 	engine.Startup();
 
-	objectFactory.Register("GameObject", hummus::Object::Instantiate<hummus::GameObject>);
-	objectFactory.Register("PhysicsComponent", hummus::Object::Instantiate<hummus::PhysicsComponent>);
-	objectFactory.Register("SpriteComponent", hummus::Object::Instantiate<hummus::SpriteComponent>);
-	objectFactory.Register("PlayerComponent", hummus::Object::Instantiate<hummus::PlayerComponent>);
-	
-	hummus::GameObject* player = objectFactory.Create<hummus::GameObject>("GameObject");
+	hummus::ObjectFactory::Instance().Initialize();
+	hummus::ObjectFactory::Instance().Register("PlayerComponent", hummus::Object::Instantiate<hummus::PlayerComponent>);
+
+	scene.Create(&engine);
+
+	rapidjson::Document document;
+	hummus::json::Load("scene.txt", document);
+	scene.Read(document);
+
+	/*hummus::GameObject* player = hummus::ObjectFactory::Instance().Create<hummus::GameObject>("GameObject");
 	player->Create(&engine);
 	rapidjson::Document document;
 	hummus::json::Load("player.txt", document);
 	player->Read(document);
 
-	hummus::Component* comp = objectFactory.Create<hummus::PhysicsComponent>("PhysicsComponent");
+	hummus::Component* comp = hummus::ObjectFactory::Instance().Create<hummus::Component>("PhysicsComponent");
+	comp->Create(player);
 	player->AddComponent(comp);
-	comp->Create();
 
-	comp = objectFactory.Create<hummus::SpriteComponent>("SpriteComponent");
-	player->AddComponent(comp);
+	comp = hummus::ObjectFactory::Instance().Create<hummus::Component>("SpriteComponent");
+	comp->Create(player);
 	hummus::json::Load("sprite.txt", document);
 	comp->Read(document);
-	comp->Create();
-
-	comp = objectFactory.Create<hummus::PlayerComponent>("PlayerComponent");
 	player->AddComponent(comp);
-	comp->Create();
+
+	comp = hummus::ObjectFactory::Instance().Create<hummus::Component>("PlayerComponent");
+	comp->Create(player);
+	player->AddComponent(comp);*/
 
 	//Create textures
-	hummus::Texture* background = engine.GetSystem<hummus::ResourceManager>()->Get<hummus::Texture>("background.png", engine.GetSystem<hummus::Renderer>());
+	//hummus::Texture* background = engine.GetSystem<hummus::ResourceManager>()->Get<hummus::Texture>("background.png", engine.GetSystem<hummus::Renderer>());
 	
 	SDL_Event event;
 	bool quit = false;
@@ -94,21 +98,25 @@ int main(int, char**)
 		}
 
 		engine.Update();
-		player->Update();
+		scene.Update();
+		//player->Update();
 
 
 		//Quit
 		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_ESCAPE) == hummus::InputSystem::eButtonState::HELD)
 			quit = true;
 
-		//Draw
-		background->Draw({ 0, 0 }, { 1, 1 }, 0);
+		engine.GetSystem<hummus::Renderer>()->StartFrame();
 
-		player->Draw();
+		//Draw
+		//background->Draw({ 0, 0 }, { 1, 1 }, 0);
+		scene.Draw();
+		//player->Draw();
 
 		engine.GetSystem<hummus::Renderer>()->EndFrame();
 	}
 
+	scene.Destroy();
 	engine.Shutdown();
 
 	return 0;

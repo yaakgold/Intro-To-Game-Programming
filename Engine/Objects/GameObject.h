@@ -34,6 +34,8 @@ namespace hummus
 		void RemoveComponent(Component* component);
 		void RemoveAllComponents();
 
+		void ReadComponents(const rapidjson::Value& value);
+
 		void Update();
 		void Draw();
 
@@ -41,6 +43,7 @@ namespace hummus
 		friend class PhysicsComponent;
 
 	public:
+		std::string m_name;
 		Transform m_transform;
 		Engine* m_engine;
 

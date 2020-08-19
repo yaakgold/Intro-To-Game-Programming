@@ -6,6 +6,7 @@ namespace hummus
 {
 	bool Engine::Startup()
 	{
+
 		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		{
 			std::cout << "SDL_INIT Error." << SDL_GetError() << std::endl;

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameObject.h"
 #include <Components/Component.h>
+#include <Objects/ObjectFactory.h>
 #include <Components\RenderComponent.h>
 
 namespace hummus
@@ -18,14 +19,21 @@ namespace hummus
 
     void GameObject::Read(const rapidjson::Value& value)
     {
-        hummus::json::Get(value, "position", m_transform.position);
-        hummus::json::Get(value, "scale", m_transform.scale);
-        hummus::json::Get(value, "angle", m_transform.angle);
+        json::Get(value, "name", m_name);
+        json::Get(value, "position", m_transform.position);
+        json::Get(value, "scale", m_transform.scale);
+        json::Get(value, "angle", m_transform.angle);
+
+        const rapidjson::Value& componentsValue = value["Components"];
+        if (componentsValue.IsArray())
+        {
+            ReadComponents(componentsValue);
+        }
     }
 
     void GameObject::AddComponent(Component* component)
     {
-        component->m_owner = this;
+        //component->m_owner = this;
         m_components.push_back(component);
     }
 
@@ -47,6 +55,27 @@ namespace hummus
             delete component;
         }
         m_components.clear();
+    }
+
+    void GameObject::ReadComponents(const rapidjson::Value& value)
+    {
+        for (rapidjson::SizeType i = 0; i < value.Size(); i++)
+        {
+            const rapidjson::Value& componentValue = value[i];
+            if (componentValue.IsObject())
+            {
+                std::string typeName;
+                json::Get(componentValue, "type", typeName);
+
+                Component* component = ObjectFactory::Instance().Create<Component>(typeName);
+                if (component)
+                {
+                    component->Create(this);
+                    component->Read(componentValue);
+                    AddComponent(component);
+                }
+            }
+        }
     }
 
     void GameObject::Update()

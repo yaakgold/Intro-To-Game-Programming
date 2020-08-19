@@ -6,8 +6,7 @@ namespace hummus
 {
     bool SpriteComponent::Create(void* data)
     {
-        m_texture = m_owner->m_engine->GetSystem<hummus::ResourceManager>()->Get<hummus::Texture>(m_textureName, m_owner->m_engine->GetSystem<hummus::Renderer>());
-
+        m_owner = static_cast<GameObject*>(data);
         return true;
     }
 
@@ -29,6 +28,7 @@ namespace hummus
 
     void SpriteComponent::Draw()
     {
-        m_texture->Draw(m_rect, m_owner->m_transform.position, Vector2{ 1, 1 } * m_owner->m_transform.scale, m_owner->m_transform.angle);
+        Texture* texture = m_owner->m_engine->GetSystem<hummus::ResourceManager>()->Get<hummus::Texture>(m_textureName, m_owner->m_engine->GetSystem<hummus::Renderer>());
+        texture->Draw(m_rect, m_owner->m_transform.position, Vector2{ 1, 1 } * m_owner->m_transform.scale, m_owner->m_transform.angle);
     }
 }
