@@ -12,8 +12,8 @@ namespace hummus
 		bool Create(const std::string& fileName, void* renderer) override;
 		void Destroy() override;
 
-		void Draw(const Vector2& pos, const Vector2& scale, float angle);
-		void Draw(const SDL_Rect& source, const Vector2& pos, const Vector2& scale, float angle);
+		void Draw(const Vector2& pos, float angle, const Vector2& scale, const Vector2& origin);
+		void Draw(const SDL_Rect& source, const Vector2& pos, float angle, const Vector2& scale, const Vector2& origin);
 
 		Vector2 GetSize();
 
