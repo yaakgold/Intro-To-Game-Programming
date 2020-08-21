@@ -14,45 +14,10 @@ hummus::Scene scene;
 
 int main(int, char**)
 {
-#pragma region JSON Testing
-	/*
-	rapidjson::Document document;
-	hummus::json::Load("json.txt", document);
-
-	std::string str; 
-	hummus::json::Get(document, "string", str);
-	std::cout << str << std::endl; 
-	
-	bool b;
-	hummus::json::Get(document, "bool", b); 
-	std::cout << b << std::endl; 
-	
-	int i1; 
-	hummus::json::Get(document, "integer1", i1); 
-	std::cout << i1 << std::endl; 
-	
-	int i2;
-	hummus::json::Get(document, "integer2", i2);
-	std::cout << i2 << std::endl; 
-	
-	float f;
-	hummus::json::Get(document, "float", f);
-	std::cout << f << std::endl; 
-	
-	hummus::Vector2 v2; 
-	hummus::json::Get(document, "vector2", v2);
-	std::cout << v2 << std::endl; 
-	
-	hummus::Color color; 
-	hummus::json::Get(document, "color", color);
-	std::cout << color << std::endl;
-	*/
-#pragma endregion
-
 	engine.Startup();
 
 	hummus::ObjectFactory::Instance().Initialize();
-	hummus::ObjectFactory::Instance().Register("PlayerComponent", hummus::Object::Instantiate<hummus::PlayerComponent>);
+	hummus::ObjectFactory::Instance().Register("PlayerComponent", new hummus::Creator<hummus::PlayerComponent, hummus::Object>);
 
 	scene.Create(&engine);
 
@@ -60,29 +25,14 @@ int main(int, char**)
 	hummus::json::Load("scene.txt", document);
 	scene.Read(document);
 
-	/*hummus::GameObject* player = hummus::ObjectFactory::Instance().Create<hummus::GameObject>("GameObject");
-	player->Create(&engine);
-	rapidjson::Document document;
-	hummus::json::Load("player.txt", document);
-	player->Read(document);
+	for (size_t i = 0; i < 10; i++)
+	{
+		hummus::GameObject* gameObject = hummus::ObjectFactory::Instance().Create<hummus::GameObject>("ProtoExplosion");
+		gameObject->m_transform.position = { hummus::random(0, 800), hummus::random(0, 600) };
+		gameObject->m_transform.angle = hummus::random(0, 360);
+		scene.AddGameObject(gameObject);
+	}
 
-	hummus::Component* comp = hummus::ObjectFactory::Instance().Create<hummus::Component>("PhysicsComponent");
-	comp->Create(player);
-	player->AddComponent(comp);
-
-	comp = hummus::ObjectFactory::Instance().Create<hummus::Component>("SpriteComponent");
-	comp->Create(player);
-	hummus::json::Load("sprite.txt", document);
-	comp->Read(document);
-	player->AddComponent(comp);
-
-	comp = hummus::ObjectFactory::Instance().Create<hummus::Component>("PlayerComponent");
-	comp->Create(player);
-	player->AddComponent(comp);*/
-
-	//Create textures
-	//hummus::Texture* background = engine.GetSystem<hummus::ResourceManager>()->Get<hummus::Texture>("background.png", engine.GetSystem<hummus::Renderer>());
-	
 	SDL_Event event;
 	bool quit = false;
 	while (!quit)

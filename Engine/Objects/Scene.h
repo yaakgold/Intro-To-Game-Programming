@@ -23,6 +23,7 @@ namespace hummus
 		void RemoveGameObject(GameObject* gameObject);
 		void RemoveAllGameObjects();
 		void ReadGameObjects(const rapidjson::Value& value);
+		void ReadPrototypes(const rapidjson::Value& value);
 
 	protected:
 		Engine* m_engine{ nullptr };

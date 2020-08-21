@@ -11,8 +11,12 @@ namespace hummus
 	class GameObject : public Object
 	{
 	public:
+		GameObject() = default;
+		GameObject(const GameObject& other);
+
 		virtual bool Create(void* data = nullptr) override;
 		virtual void Destroy() override;
+		virtual Object* Clone() override { return new GameObject(*this); }
 
 		virtual void Read(const rapidjson::Value& value) override;
 
@@ -45,7 +49,7 @@ namespace hummus
 	public:
 		std::string m_name;
 		Transform m_transform;
-		Engine* m_engine;
+		Engine* m_engine{ nullptr };
 
 	protected:
 		std::vector<Component*> m_components;

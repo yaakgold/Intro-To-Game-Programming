@@ -7,9 +7,9 @@ namespace hummus
 {
 	void ObjectFactoryImpl::Initialize()
 	{
-		ObjectFactory::Instance().Register("GameObject", hummus::Object::Instantiate<hummus::GameObject>);
-		ObjectFactory::Instance().Register("PhysicsComponent", hummus::Object::Instantiate<hummus::PhysicsComponent>);
-		ObjectFactory::Instance().Register("SpriteComponent", hummus::Object::Instantiate<hummus::SpriteComponent>);
-		ObjectFactory::Instance().Register("SpriteAnimationComponent", hummus::Object::Instantiate<hummus::SpriteAnimationComponent>);
+		ObjectFactory::Instance().Register("GameObject", new Creator<GameObject, Object>);
+		ObjectFactory::Instance().Register("PhysicsComponent", new Creator<PhysicsComponent, Object>);
+		ObjectFactory::Instance().Register("SpriteComponent", new Creator<SpriteComponent, Object>);
+		ObjectFactory::Instance().Register("SpriteAnimationComponent", new Creator<SpriteAnimationComponent, Object>);
 	}
 }
