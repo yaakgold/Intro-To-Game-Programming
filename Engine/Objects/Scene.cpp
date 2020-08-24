@@ -43,6 +43,21 @@ namespace hummus
         {
             gameObject->Update();
         }
+
+        auto iter = m_gameObjects.begin();
+        while (iter != m_gameObjects.end())
+        {
+            if ((*iter)->m_flags[GameObject::eFlags::DESTROY])
+            {
+                (*iter)->Destroy();
+                delete* iter;
+                iter = m_gameObjects.erase(iter);
+            }
+            else
+            {
+                iter++;
+            }
+        }
     }
 
     void Scene::Draw()
@@ -63,6 +78,21 @@ namespace hummus
             }
         }
         return nullptr;
+    }
+
+    std::vector<GameObject*> Scene::FindGameObjectsByTag(const std::string& tag)
+    {
+        std::vector<GameObject*> gameObjects;
+
+        for (auto gameObject : m_gameObjects)
+        {
+            if (gameObject->m_tag == tag)
+            {
+                m_gameObjects.push_back(gameObject);
+            }
+        }
+
+        return gameObjects;
     }
 
     void Scene::AddGameObject(GameObject* gameObject)
@@ -96,7 +126,6 @@ namespace hummus
     {
         for (rapidjson::SizeType i = 0; i < value.Size(); i++)
         {
-            std::cout << "This ran" << std::endl;
             const rapidjson::Value& objectValue = value[i];
             if (objectValue.IsObject())
             {
@@ -118,7 +147,6 @@ namespace hummus
     {
         for (rapidjson::SizeType i = 0; i < value.Size(); i++)
         {
-            std::cout << "This ran" << std::endl;
             const rapidjson::Value& objectValue = value[i];
             if (objectValue.IsObject())
             {

@@ -3,6 +3,7 @@
 #include <Objects/Object.h>
 #include <Engine.h>
 #include <vector>
+#include <bitset>
 
 namespace hummus
 {
@@ -10,6 +11,16 @@ namespace hummus
 
 	class GameObject : public Object
 	{
+	public:
+		enum eFlags
+		{
+			ACTIVE,
+			VISIBLE,
+			DESTROY,
+			TRANSIENT
+		};
+
+
 	public:
 		GameObject() = default;
 		GameObject(const GameObject& other);
@@ -48,6 +59,11 @@ namespace hummus
 
 	public:
 		std::string m_name;
+		std::string m_tag;
+		float m_lifetime{ 0 };
+		
+		std::bitset<32> m_flags;
+
 		Transform m_transform;
 		Engine* m_engine{ nullptr };
 

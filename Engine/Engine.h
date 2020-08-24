@@ -3,6 +3,7 @@
 #include <Core/Timer.h>
 #include <Input/InputSystem.h>
 #include <Graphics/Renderer.h>
+#include <Physics/PhysicsSystem.h>
 #include <Resources/ResourceManager.h>
 
 namespace hummus
