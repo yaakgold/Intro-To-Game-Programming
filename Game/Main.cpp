@@ -10,7 +10,6 @@
 
 hummus::Engine engine;
 hummus::Scene scene;
-//hummus::Factory<hummus::Object, std::string> objectFactory;
 
 int main(int, char**)
 {
@@ -49,7 +48,6 @@ int main(int, char**)
 
 		engine.Update();
 		scene.Update();
-		//player->Update();
 
 
 		//Quit
@@ -58,10 +56,7 @@ int main(int, char**)
 
 		engine.GetSystem<hummus::Renderer>()->StartFrame();
 
-		//Draw
-		//background->Draw({ 0, 0 }, { 1, 1 }, 0);
 		scene.Draw();
-		//player->Draw();
 
 		engine.GetSystem<hummus::Renderer>()->EndFrame();
 	}

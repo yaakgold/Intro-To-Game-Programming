@@ -1,6 +1,6 @@
 #pragma once
-
 #include <iostream>
+#include <box2d/box2d.h>
 
 namespace hummus
 {
@@ -18,6 +18,7 @@ namespace hummus
 
 		Vector2(float x, float y) : x{ x }, y{ y } {}
 		Vector2(int x, int y) : x{ static_cast<float>(x) }, y{ static_cast<float>(y) } {}
+		Vector2(const b2Vec2& v) : x{ v.x }, y{ v.y } {}
 
 		void Set(float x, float y) { this->x = x; this->y = y; }
 
@@ -47,6 +48,7 @@ namespace hummus
 
 		Vector2 operator - () { return Vector2{ -x, -y }; }
 
+		operator b2Vec2() const { return b2Vec2{ x, y }; }
 
 		float& operator [] (size_t index) { return (&x)[index]; }
 		const float& operator [] (size_t index) const { return (&x)[index]; }

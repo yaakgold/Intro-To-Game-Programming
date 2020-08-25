@@ -13,7 +13,7 @@ namespace hummus
 
 		virtual void Update() override;
 
-		void ApplyForce(const Vector2& force) { m_force = force; }
+		virtual void ApplyForce(const Vector2& force) { m_force = force; }
 	protected:
 		Vector2 m_velocity;
 		Vector2 m_force;
