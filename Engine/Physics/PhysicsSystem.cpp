@@ -8,6 +8,9 @@ namespace hummus
         b2Vec2 gravity{ 0, 150 };
         m_world = new b2World(gravity);
 
+        contactListener = new ContactListener;
+        m_world->SetContactListener(contactListener);
+
         return true;
     }
 
@@ -17,7 +20,7 @@ namespace hummus
 
         m_world->Step(timeStep, 8, 3);
     }
-
+    
     void PhysicsSystem::Shutdown()
     {
         delete m_world;
@@ -56,6 +59,7 @@ namespace hummus
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &shape;
         fixtureDef.density = rb.density;
+        fixtureDef.restitution = rb.restitution;
         fixtureDef.friction = rb.friction;
         fixtureDef.userData = gameObject;
 

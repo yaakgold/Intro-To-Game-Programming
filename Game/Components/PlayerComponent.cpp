@@ -30,9 +30,16 @@ namespace hummus
 			//m_owner->m_transform.angle += 200.0f * m_owner->m_engine->GetTimer().DeltaTime();
 		}
 
-		if (m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_SPACE) == hummus::InputSystem::eButtonState::HELD)
+		if (m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_SPACE) == hummus::InputSystem::eButtonState::HELD || m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_W) == hummus::InputSystem::eButtonState::HELD)
 		{
 			force.y = -200000000;
+
+			AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
+
+			if (audioComponent)
+			{
+				audioComponent->Play();
+			}
 		}
 
 		RigidBodyComponent* component = m_owner->GetComponent<RigidBodyComponent>();

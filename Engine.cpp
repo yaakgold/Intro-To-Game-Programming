@@ -1,11 +1,13 @@
 #pragma once
 #include "pch.h"
+#include <time.h>
 #include "Engine.h"
 
 namespace hummus
 {
 	bool Engine::Startup()
 	{
+		srand(static_cast<unsigned int>(time(nullptr)));
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		{
@@ -17,6 +19,7 @@ namespace hummus
 		m_systems.push_back(new InputSystem);
 		m_systems.push_back(new ResourceManager);
 		m_systems.push_back(new PhysicsSystem);
+		m_systems.push_back(new AudioSystem);
 
 
 		for (auto system : m_systems)

@@ -25,6 +25,38 @@
 					"fps":30
 				}
 			]
+		},
+		{
+			"type":"GameObject",
+			"name":"ProtoBox",
+			"position":[
+				400,
+				500
+			],
+			"scale":1,
+			"angle":0,
+			"Components":[
+				{
+					"type":"SpriteComponent",
+					"texture":"box.png",
+					"origin": [0.5, 0.5],
+					"rect":[
+						0,
+						0,
+						32,
+						32
+					]
+				},
+				{
+					"type":"RigidBodyComponent",
+					"isDynamic":true,
+					"lockAngle":false,
+					"size":[16, 16],
+					"density":1,
+					"friction":1,
+					"restitution":5
+				}
+			]
 		}
 	],
 	"GameObjects":[
@@ -76,7 +108,8 @@
 					"lockAngle":true,
 					"size":[16, 32],
 					"density":1,
-					"friction":1
+					"friction":1,
+					"restitution":0.3
 				},
 				{
 					"type":"PlayerComponent"
@@ -94,6 +127,12 @@
 						32,
 						64
 					]
+				},
+				{
+					"type":"AudioComponent",
+					"sound":"jump.wav",
+					"playOnAwake":true,
+					"loop":false
 				}
 			]
 		},
@@ -102,6 +141,15 @@
 			"name":"Explosion",
 			"position":[
 				500,
+				200
+			],
+			"scale":1
+		},
+		{
+			"type":"ProtoExplosion",
+			"name":"Explosion",
+			"position":[
+				300,
 				200
 			],
 			"scale":1

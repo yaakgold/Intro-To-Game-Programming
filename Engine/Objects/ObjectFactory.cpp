@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "ObjectFactory.h"
-#include "Components/SpriteAnimationComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/RigidBodyComponent.h"
+#include "Components/SpriteAnimationComponent.h"
 
 namespace hummus
 {
@@ -12,5 +13,6 @@ namespace hummus
 		ObjectFactory::Instance().Register("SpriteComponent", new Creator<SpriteComponent, Object>);
 		ObjectFactory::Instance().Register("SpriteAnimationComponent", new Creator<SpriteAnimationComponent, Object>);
 		ObjectFactory::Instance().Register("RigidBodyComponent", new Creator<RigidBodyComponent, Object>);
+		ObjectFactory::Instance().Register("AudioComponent", new Creator<AudioComponent, Object>);
 	}
 }

@@ -17,8 +17,8 @@ namespace hummus
                 rapidjson::IStreamWrapper istream(stream); 
                 document.ParseStream(istream);      
                 success = document.IsObject();
+                ASSERT_MSG(success, "Error JSON is not valid" + filename);
             }
-
             return success;
         }
 

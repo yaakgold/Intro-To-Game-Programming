@@ -1,5 +1,6 @@
 #pragma once
 #include "Components/Component.h"
+#include "Components/AudioComponent.h"
 
 namespace hummus
 {

@@ -1,6 +1,7 @@
 #pragma once
 #include <Core/System.h>
 #include <box2d/box2d.h>
+#include "Physics/ContactListener.h"
 
 namespace hummus
 {
@@ -14,6 +15,7 @@ namespace hummus
 			Vector2 size;
 			float density{ 0 };
 			float friction{ 1 };
+			float restitution{ 0.3f };
 			bool lockAngle{ false };
 			bool isDynamic{ false };
 		};
@@ -28,5 +30,6 @@ namespace hummus
 
 	protected:
 		b2World* m_world{ nullptr };
+		ContactListener* contactListener{nullptr};
 	};
 }

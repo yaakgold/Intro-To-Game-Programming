@@ -129,4 +129,14 @@ namespace hummus
             comp->Draw();
         }
     }
+
+    void GameObject::BeginContact(GameObject* other)
+    {
+        std::cout << "Begin collision with: " << other->m_name << std::endl;
+    }
+
+    void GameObject::EndContact(GameObject* other)
+    {
+        std::cout << "End collision with: " << other->m_name << std::endl;
+    }
 }

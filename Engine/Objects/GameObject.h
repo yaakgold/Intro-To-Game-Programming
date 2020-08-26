@@ -54,6 +54,9 @@ namespace hummus
 		void Update();
 		void Draw();
 
+		void BeginContact(GameObject* other);
+		void EndContact(GameObject* other);
+
 		friend class Component;
 		friend class PhysicsComponent;
 

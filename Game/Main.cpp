@@ -24,13 +24,13 @@ int main(int, char**)
 	hummus::json::Load("scene.txt", document);
 	scene.Read(document);
 
-	/*for (size_t i = 0; i < 10; i++)
+	for (size_t i = 0; i < 10; i++)
 	{
-		hummus::GameObject* gameObject = hummus::ObjectFactory::Instance().Create<hummus::GameObject>("ProtoExplosion");
-		gameObject->m_transform.position = { hummus::random(0, 800), hummus::random(0, 600) };
+		hummus::GameObject* gameObject = hummus::ObjectFactory::Instance().Create<hummus::GameObject>("ProtoBox");
+		gameObject->m_transform.position = { hummus::random(0, 800), hummus::random(0, 200) };
 		gameObject->m_transform.angle = hummus::random(0, 360);
 		scene.AddGameObject(gameObject);
-	}*/
+	}
 
 	SDL_Event event;
 	bool quit = false;
