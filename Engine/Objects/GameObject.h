@@ -56,6 +56,7 @@ namespace hummus
 
 		void BeginContact(GameObject* other);
 		void EndContact(GameObject* other);
+		std::vector<GameObject*> GetContactsByTag(const std::string& tag);
 
 		friend class Component;
 		friend class PhysicsComponent;
@@ -72,5 +73,6 @@ namespace hummus
 
 	protected:
 		std::vector<Component*> m_components;
+		std::list<GameObject*> m_contacts;
 	};
 }

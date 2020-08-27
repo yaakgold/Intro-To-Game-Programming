@@ -17,35 +17,45 @@ namespace hummus
 
     void PlayerComponent::Update()
     {
+		auto floorContacts = m_owner->GetContactsByTag("Floor");
+		auto itemContacts = m_owner->GetContactsByTag("Box");
+		bool onGround = (!floorContacts.empty() || !itemContacts.empty());
+
 		Vector2 force{ 0,0 };
 
 		if (m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_LEFT) == hummus::InputSystem::eButtonState::HELD || m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_A) == hummus::InputSystem::eButtonState::HELD)
 		{
-			force.x = -200000;
+			force.x = -20;
 			//m_owner->m_transform.angle += -200.0f * m_owner->m_engine->GetTimer().DeltaTime();
 		}
 		if (m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_RIGHT) == hummus::InputSystem::eButtonState::HELD || m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_D) == hummus::InputSystem::eButtonState::HELD)
 		{
-			force.x = 200000;
+			force.x = 20;
 			//m_owner->m_transform.angle += 200.0f * m_owner->m_engine->GetTimer().DeltaTime();
 		}
 
-		if (m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_SPACE) == hummus::InputSystem::eButtonState::HELD || m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_W) == hummus::InputSystem::eButtonState::HELD)
+		if (onGround && (m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_SPACE) == hummus::InputSystem::eButtonState::HELD || m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_W) == hummus::InputSystem::eButtonState::HELD))
 		{
-			force.y = -200000000;
+			force.y = -500;
 
-			AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
+			/*AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
 
 			if (audioComponent)
 			{
 				audioComponent->Play();
-			}
+			}*/
 		}
 
 		RigidBodyComponent* component = m_owner->GetComponent<RigidBodyComponent>();
 		if (component)
 		{
 			component->ApplyForce(force);
+		}
+
+		auto coinContacts = m_owner->GetContactsByTag("Coin");
+		for (auto contact : coinContacts)
+		{
+			contact->m_flags[GameObject::eFlags::DESTROY] = true;
 		}
     }
 }

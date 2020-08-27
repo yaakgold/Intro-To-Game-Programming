@@ -12,12 +12,13 @@ namespace hummus
 
     void RigidBodyComponent::Destroy()
     {
-
+        m_owner->m_engine->GetSystem<PhysicsSystem>()->DestroyBody(m_body);
     }
 
     void RigidBodyComponent::Read(const rapidjson::Value& value)
     {
         json::Get(value, "isDynamic", m_rb.isDynamic);
+        json::Get(value, "isTrigger", m_rb.isTrigger);
         json::Get(value, "lockAngle", m_rb.lockAngle);
         json::Get(value, "size", m_rb.size);
         json::Get(value, "density", m_rb.density);
@@ -29,16 +30,16 @@ namespace hummus
     {
         if (m_body == nullptr)
         {
-            m_body = m_owner->m_engine->GetSystem<PhysicsSystem>()->CreateBody(m_owner->m_transform.position, m_rb, m_owner);
-            m_body->SetTransform(m_owner->m_transform.position, DegsToRads(m_owner->m_transform.angle));
+            m_body = m_owner->m_engine->GetSystem<PhysicsSystem>()->CreateBody(m_owner->m_transform.position, m_owner->m_transform.angle, m_rb, m_owner);
         }
 
-        m_owner->m_transform.position = m_body->GetPosition();
+        m_owner->m_transform.position = PhysicsSystem::WorldToScreen(m_body->GetPosition());
         m_owner->m_transform.angle = hummus::RadsToDegs(m_body->GetAngle());
     }
 
     void RigidBodyComponent::ApplyForce(const Vector2& force)
     {
-        m_body->ApplyLinearImpulseToCenter(force, true);
+        m_body->ApplyForceToCenter(force, true);
+        m_body->SetLinearDamping(0.05f);
     }
 }

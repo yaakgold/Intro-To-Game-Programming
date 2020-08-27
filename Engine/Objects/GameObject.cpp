@@ -33,7 +33,7 @@ namespace hummus
 
     void GameObject::Destroy()
     {
-
+        RemoveAllComponents();
     }
 
     void GameObject::Read(const rapidjson::Value& value)
@@ -132,11 +132,26 @@ namespace hummus
 
     void GameObject::BeginContact(GameObject* other)
     {
-        std::cout << "Begin collision with: " << other->m_name << std::endl;
+        m_contacts.push_back(other);
     }
 
     void GameObject::EndContact(GameObject* other)
     {
-        std::cout << "End collision with: " << other->m_name << std::endl;
+        m_contacts.remove(other);
+    }
+
+    std::vector<GameObject*> GameObject::GetContactsByTag(const std::string& tag)
+    {
+        std::vector<GameObject*> contacts;
+
+        for (auto c : m_contacts)
+        {
+            if (c->m_tag == tag)
+            {
+                contacts.push_back(c);
+            }
+        }
+
+        return contacts;
     }
 }

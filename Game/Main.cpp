@@ -26,9 +26,9 @@ int main(int, char**)
 
 	for (size_t i = 0; i < 10; i++)
 	{
-		hummus::GameObject* gameObject = hummus::ObjectFactory::Instance().Create<hummus::GameObject>("ProtoBox");
-		gameObject->m_transform.position = { hummus::random(0, 800), hummus::random(0, 200) };
-		gameObject->m_transform.angle = hummus::random(0, 360);
+		hummus::GameObject* gameObject = hummus::ObjectFactory::Instance().Create<hummus::GameObject>("ProtoCoin");
+		gameObject->m_transform.position = { hummus::random(0, 800), hummus::random(200, 300) };
+		//gameObject->m_transform.angle = hummus::random(0, 360);
 		scene.AddGameObject(gameObject);
 	}
 

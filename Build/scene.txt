@@ -28,7 +28,44 @@
 		},
 		{
 			"type":"GameObject",
+			"name":"ProtoCoin",
+			"tag":"Coin",
+			"transient":false,
+			"position":[
+				400,
+				300
+			],
+			"scale":1,
+			"angle":0,
+			"Components":[
+				{
+					"type":"SpriteAnimationComponent",
+					"texture":"coin.png",
+					"origin":[
+						0.5,
+						0.5
+					],
+					"numX":8,
+					"numY":1,
+					"numFrames":8,
+					"fps":30
+				},
+				{
+					"type":"RigidBodyComponent",
+					"isDynamic":false,
+					"isTrigger":true,
+					"lockAngle":true,
+					"size":[16, 16],
+					"density":1,
+					"friction":1,
+					"restitution":0
+				}
+			]
+		},
+		{
+			"type":"GameObject",
 			"name":"ProtoBox",
+			"tag":"Box",
 			"position":[
 				400,
 				500
@@ -38,7 +75,7 @@
 			"Components":[
 				{
 					"type":"SpriteComponent",
-					"texture":"box.png",
+					"texture":"crate.png",
 					"origin": [0.5, 0.5],
 					"rect":[
 						0,
@@ -63,6 +100,7 @@
 		{
 			"type":"GameObject",
 			"name":"Ground",
+			"tag":"Floor",
 			"position":[
 				400,
 				450
@@ -73,7 +111,7 @@
 				{
 					"type":"SpriteComponent",
 					"texture":"ground.png",
-					"origin": [0.5, 0.5],
+					"origin": [0.5, 1.5],
 					"rect":[
 						0,
 						0,
