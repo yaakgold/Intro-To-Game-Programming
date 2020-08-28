@@ -1,5 +1,6 @@
 #include <pch.h>
 #include <Engine.h>
+#include "TileMap.h"
 #include <Core/Json.h>
 #include <Core/Factory.h>
 #include <Objects/Scene.h>
@@ -24,13 +25,18 @@ int main(int, char**)
 	hummus::json::Load("scene.txt", document);
 	scene.Read(document);
 
-	for (size_t i = 0; i < 10; i++)
-	{
-		hummus::GameObject* gameObject = hummus::ObjectFactory::Instance().Create<hummus::GameObject>("ProtoCoin");
-		gameObject->m_transform.position = { hummus::random(0, 800), hummus::random(200, 300) };
-		//gameObject->m_transform.angle = hummus::random(0, 360);
-		scene.AddGameObject(gameObject);
-	}
+	hummus::TileMap tileMap;
+	hummus::json::Load("tileMap.txt", document);
+	tileMap.Read(document);
+	tileMap.Create(&scene);
+
+	//for (size_t i = 0; i < 10; i++)
+	//{
+	//	hummus::GameObject* gameObject = hummus::ObjectFactory::Instance().Create<hummus::GameObject>("ProtoCoin");
+	//	gameObject->m_transform.position = { hummus::random(0, 800), hummus::random(200, 300) };
+	//	//gameObject->m_transform.angle = hummus::random(0, 360);
+	//	scene.AddGameObject(gameObject);
+	//}
 
 	SDL_Event event;
 	bool quit = false;
