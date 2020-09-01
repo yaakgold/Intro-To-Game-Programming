@@ -1,13 +1,16 @@
 #pragma once
 
+#include <Math/Transform.h>
 #include <Objects/Object.h>
 #include <Engine.h>
 #include <vector>
 #include <bitset>
+#include <list>
 
 namespace hummus
 {
 	class Component;
+	class Scene;
 
 	class GameObject : public Object
 	{
@@ -70,6 +73,7 @@ namespace hummus
 
 		Transform m_transform;
 		Engine* m_engine{ nullptr };
+		Scene* m_scene{ nullptr };
 
 	protected:
 		std::vector<Component*> m_components;

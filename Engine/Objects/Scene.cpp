@@ -135,7 +135,7 @@ namespace hummus
 
                 if (gameObject)
                 {
-                    gameObject->Create(m_engine);
+                    gameObject->Create(this);
                     gameObject->Read(objectValue);
                     AddGameObject(gameObject);
                 }
@@ -156,7 +156,7 @@ namespace hummus
 
                 if (gameObject)
                 {
-                    gameObject->Create(m_engine);
+                    gameObject->Create(this);
                     gameObject->Read(objectValue);
                     
                     ObjectFactory::Instance().Register(gameObject->m_name, new Prototype<Object>(gameObject));

@@ -2,6 +2,7 @@
 #include <Math/Vector2.h>
 #include <Math/Color.h>
 #include <document.h>
+#include <vector>
 #include <string>
 #include <SDL.h>
 

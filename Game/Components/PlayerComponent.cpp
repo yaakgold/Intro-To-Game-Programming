@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerComponent.h"
 #include "Components/RigidBodyComponent.h"
+#include <Components/SpriteComponent.h>
 
 namespace hummus
 {
@@ -50,6 +51,13 @@ namespace hummus
 		if (component)
 		{
 			component->ApplyForce(force);
+
+			Vector2 velocity = component->GetVelocity();
+
+			SpriteComponent* spriteComponent = m_owner->GetComponent<SpriteComponent>();
+
+			if (velocity.x <= -0.5f) spriteComponent->Flip();
+			else if (velocity.x >= 0.5f) spriteComponent->Flip(false);
 		}
 
 		auto coinContacts = m_owner->GetContactsByTag("Coin");

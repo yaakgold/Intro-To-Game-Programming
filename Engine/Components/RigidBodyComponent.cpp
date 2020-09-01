@@ -24,6 +24,7 @@ namespace hummus
         json::Get(value, "density", m_rb.density);
         json::Get(value, "friction", m_rb.friction);
         json::Get(value, "restitution", m_rb.restitution);
+        json::Get(value, "gravityScale", m_rb.gravityScale);
     }
 
     void RigidBodyComponent::Update()
@@ -31,6 +32,7 @@ namespace hummus
         if (m_body == nullptr)
         {
             m_body = m_owner->m_engine->GetSystem<PhysicsSystem>()->CreateBody(m_owner->m_transform.position, m_owner->m_transform.angle, m_rb, m_owner);
+            m_body->SetGravityScale(m_rb.gravityScale);
         }
 
         m_owner->m_transform.position = PhysicsSystem::WorldToScreen(m_body->GetPosition());
@@ -43,6 +45,9 @@ namespace hummus
 
     void RigidBodyComponent::ApplyForce(const Vector2& force)
     {
-        m_body->ApplyForceToCenter(force, true);
+        if (m_body)
+        {
+            m_body->ApplyForceToCenter(force, true);
+        }
     }
 }

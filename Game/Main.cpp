@@ -7,6 +7,7 @@
 #include <Math/MathFile.h>
 #include <Graphics/Texture.h>
 #include <Objects/ObjectFactory.h>
+#include "Components/EnemyComponent.h"
 #include "Components/PlayerComponent.h"
 
 hummus::Engine engine;
@@ -18,6 +19,7 @@ int main(int, char**)
 
 	hummus::ObjectFactory::Instance().Initialize();
 	hummus::ObjectFactory::Instance().Register("PlayerComponent", new hummus::Creator<hummus::PlayerComponent, hummus::Object>);
+	hummus::ObjectFactory::Instance().Register("EnemyComponent", new hummus::Creator<hummus::EnemyComponent, hummus::Object>);
 
 	scene.Create(&engine);
 

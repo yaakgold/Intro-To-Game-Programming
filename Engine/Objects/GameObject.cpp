@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "GameObject.h"
+#include <Objects/Scene.h>
 #include <Components/Component.h>
 #include <Objects/ObjectFactory.h>
-#include <Components\RenderComponent.h>
+#include <Components/RenderComponent.h>
 
 namespace hummus
 {
@@ -16,6 +17,7 @@ namespace hummus
 
         m_transform = other.m_transform;
         m_engine = other.m_engine;
+        m_scene = other.m_scene;
 
         for (Component* comp : other.m_components)
         {
@@ -27,8 +29,9 @@ namespace hummus
 
     bool GameObject::Create(void* data)
     {
-        m_engine = static_cast<Engine*>(data);
-        return false;
+        m_scene = static_cast<Scene*>(data);
+        m_engine = m_scene->m_engine;
+        return true;
     }
 
     void GameObject::Destroy()
