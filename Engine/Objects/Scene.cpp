@@ -88,7 +88,8 @@ namespace hummus
         {
             if (gameObject->m_tag == tag)
             {
-                m_gameObjects.push_back(gameObject);
+                gameObjects.push_back(gameObject);
+                //gameObject++;
             }
         }
 

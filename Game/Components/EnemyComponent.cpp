@@ -19,7 +19,7 @@ namespace hummus
 
     void EnemyComponent::Update()
     {
-        GameObject* player = m_owner->m_scene->Find("Player");
+        GameObject* player = m_owner->m_scene->Find("ProtoPlayer");
 
         if (player)
         {

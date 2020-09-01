@@ -163,8 +163,8 @@
     <ClInclude Include="TileMap.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Build\scene.txt" />
-    <Text Include="..\Build\tileMap.txt" />
+    <None Include="..\Build\scene.json" />
+    <None Include="..\Build\tileMap.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

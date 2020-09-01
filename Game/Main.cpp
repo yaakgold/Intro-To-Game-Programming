@@ -13,7 +13,10 @@
 hummus::Engine engine;
 hummus::Scene scene;
 
-int main(int, char**)
+bool restart = false;
+bool quit = false;
+
+void StartGame()
 {
 	engine.Startup();
 
@@ -24,53 +27,68 @@ int main(int, char**)
 	scene.Create(&engine);
 
 	rapidjson::Document document;
-	hummus::json::Load("scene.txt", document);
+	hummus::json::Load("SceneFiles/scene.json", document);
 	scene.Read(document);
 
 	hummus::TileMap tileMap;
-	hummus::json::Load("tileMap.txt", document);
+	hummus::json::Load("SceneFiles/tileMap.json", document);
 	tileMap.Read(document);
 	tileMap.Create(&scene);
 
-	//for (size_t i = 0; i < 10; i++)
-	//{
-	//	hummus::GameObject* gameObject = hummus::ObjectFactory::Instance().Create<hummus::GameObject>("ProtoCoin");
-	//	gameObject->m_transform.position = { hummus::random(0, 800), hummus::random(200, 300) };
-	//	//gameObject->m_transform.angle = hummus::random(0, 360);
-	//	scene.AddGameObject(gameObject);
-	//}
+	hummus::EventManager::Instance().Subscribe("CollisionEnter", std::bind(&hummus::PlayerComponent::OnCollisionEnter, scene.FindGameObjectsByTag("Player")[0]->GetComponent<hummus::PlayerComponent>(), std::placeholders::_1), scene.FindGameObjectsByTag("Player")[0]);
+	hummus::EventManager::Instance().Subscribe("CollisionExit", std::bind(&hummus::PlayerComponent::OnCollisionExit, scene.FindGameObjectsByTag("Player")[0]->GetComponent<hummus::PlayerComponent>(), std::placeholders::_1), scene.FindGameObjectsByTag("Player")[0]);
 
-	SDL_Event event;
-	bool quit = false;
-	while (!quit)
+}
+
+void GameEvent(const hummus::Event& event)
+{
+	std::cout << "PlayerDead" << std::endl;
+
+	restart = true;
+	quit = true;
+}
+
+int main(int, char**)
+{
+	do
 	{
-		SDL_PollEvent(&event);
-		switch (event.type)
+		restart = false;
+		StartGame();
+
+		hummus::EventManager::Instance().Subscribe("PlayerDead", &GameEvent);
+
+		SDL_Event event;
+		quit = false;
+		while (!quit)
 		{
-		case SDL_QUIT:
-			quit = true;
-			break;
-		default:
-			break;
+			SDL_PollEvent(&event);
+			switch (event.type)
+			{
+			case SDL_QUIT:
+				quit = true;
+				break;
+			default:
+				break;
+			}
+
+			engine.Update();
+			scene.Update();
+
+
+			//Quit
+			if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_ESCAPE) == hummus::InputSystem::eButtonState::HELD)
+				quit = true;
+
+			engine.GetSystem<hummus::Renderer>()->StartFrame();
+
+			scene.Draw();
+
+			engine.GetSystem<hummus::Renderer>()->EndFrame();
 		}
 
-		engine.Update();
-		scene.Update();
-
-
-		//Quit
-		if (engine.GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_ESCAPE) == hummus::InputSystem::eButtonState::HELD)
-			quit = true;
-
-		engine.GetSystem<hummus::Renderer>()->StartFrame();
-
-		scene.Draw();
-
-		engine.GetSystem<hummus::Renderer>()->EndFrame();
-	}
-
-	scene.Destroy();
-	engine.Shutdown();
+		scene.Destroy();
+		engine.Shutdown();
+	} while (restart);
 
 	return 0;
 }

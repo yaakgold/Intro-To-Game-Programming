@@ -22,8 +22,11 @@ namespace hummus
         for (Component* comp : other.m_components)
         {
             Component* clone = dynamic_cast<Component*>(comp->Clone());
-            clone->m_owner = this;
-            AddComponent(clone);
+            if (clone)
+            {
+                clone->m_owner = this;
+                AddComponent(clone);
+            }
         }
     }
 
@@ -136,11 +139,25 @@ namespace hummus
     void GameObject::BeginContact(GameObject* other)
     {
         m_contacts.push_back(other);
+
+        Event event;
+        event.type = "CollisionEnter";
+        event.sender = other;
+        event.reciever = this;
+
+        EventManager::Instance().Notify(event);
     }
 
     void GameObject::EndContact(GameObject* other)
     {
         m_contacts.remove(other);
+
+        Event event;
+        event.type = "CollisionExit";
+        event.sender = other;
+        event.reciever = this;
+
+        EventManager::Instance().Notify(event);
     }
 
     std::vector<GameObject*> GameObject::GetContactsByTag(const std::string& tag)

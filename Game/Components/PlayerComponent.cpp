@@ -1,13 +1,18 @@
 #include "pch.h"
 #include "PlayerComponent.h"
-#include "Components/RigidBodyComponent.h"
+#include <Core/EventManager.h>
+#include <Objects/Scene.h>
+#include <Objects/GameObject.h>
+#include <Objects/ObjectFactory.h>
 #include <Components/SpriteComponent.h>
+#include "Components/RigidBodyComponent.h"
 
 namespace hummus
 {
     bool PlayerComponent::Create(void* data)
     {
 		m_owner = static_cast<GameObject*>(data);
+
         return true;
     }
 
@@ -39,12 +44,13 @@ namespace hummus
 		{
 			force.y = -500;
 
-			/*AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
+			AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
 
 			if (audioComponent)
 			{
+				audioComponent->SetSoundName("jump.wav");
 				audioComponent->Play();
-			}*/
+			}
 		}
 
 		RigidBodyComponent* component = m_owner->GetComponent<RigidBodyComponent>();
@@ -56,14 +62,63 @@ namespace hummus
 
 			SpriteComponent* spriteComponent = m_owner->GetComponent<SpriteComponent>();
 
-			if (velocity.x <= -0.5f) spriteComponent->Flip();
-			else if (velocity.x >= 0.5f) spriteComponent->Flip(false);
-		}
-
-		auto coinContacts = m_owner->GetContactsByTag("Coin");
-		for (auto contact : coinContacts)
-		{
-			contact->m_flags[GameObject::eFlags::DESTROY] = true;
+			if (velocity.x <= -0.05f) spriteComponent->Flip();
+			else if (velocity.x >= 0.05f) spriteComponent->Flip(false);
 		}
     }
+	
+	void PlayerComponent::OnCollisionEnter(const Event& event)
+	{
+		GameObject* gameObject = dynamic_cast<GameObject*>(event.sender);
+
+		if (gameObject->m_tag == "Enemy")
+		{
+			AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
+
+			if (m_owner->m_engine->GetSystem<hummus::InputSystem>()->GetButtonState(SDL_SCANCODE_LSHIFT) == hummus::InputSystem::eButtonState::HELD)
+			{
+				if (audioComponent)
+				{
+					audioComponent->SetSoundName("EnemyHurt.wav");
+					audioComponent->Play();
+				}
+
+				gameObject->m_flags[GameObject::eFlags::DESTROY] = true;
+			}
+			else if (audioComponent)
+			{
+				audioComponent->SetSoundName("grunt.wav");
+				audioComponent->Play();
+			}
+		}
+		else if (gameObject->m_tag == "Coin")
+		{
+			AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
+
+			if (audioComponent)
+			{
+				audioComponent->SetSoundName("coin.wav");
+				audioComponent->Play();
+			}
+
+			GameObject* particle = ObjectFactory::Instance().Create<GameObject>("ProtoParticle");
+			particle->m_transform.position = gameObject->m_transform.position;
+			m_owner->m_scene->AddGameObject(particle);
+
+			gameObject->m_flags[GameObject::eFlags::DESTROY] = true;
+		}
+		else if (gameObject->m_tag == "Lava")
+		{
+			m_owner->m_flags[GameObject::eFlags::DESTROY] = true;
+
+			Event event;
+			event.type = "PlayerDead";
+			EventManager::Instance().Notify(event);
+		}
+	}
+	
+	void PlayerComponent::OnCollisionExit(const Event& event)
+	{
+		
+	}
 }

@@ -46,11 +46,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Build\scene.txt">
+    <None Include="..\Build\scene.json">
       <Filter>Build</Filter>
-    </Text>
-    <Text Include="..\Build\tileMap.txt">
+    </None>
+    <None Include="..\Build\tileMap.json">
       <Filter>Build</Filter>
-    </Text>
+    </None>
   </ItemGroup>
 </Project>

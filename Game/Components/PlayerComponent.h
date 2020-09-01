@@ -13,5 +13,7 @@ namespace hummus
 
 		virtual void Update() override;
 
+		void OnCollisionEnter(const Event& event);
+		void OnCollisionExit(const Event& event);
 	};
 }

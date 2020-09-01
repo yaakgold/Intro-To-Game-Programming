@@ -27,7 +27,7 @@ namespace hummus
                 GameObject* gameObject = ObjectFactory::Instance().Create<GameObject>(m_tileNames[index]);
 
                 float x = i % m_numX;
-                float y = i / m_numY;
+                float y = i / m_numX;
                 gameObject->m_transform.position = m_start + Vector2{ x, y } * m_size;
 
                 scene->AddGameObject(gameObject);
